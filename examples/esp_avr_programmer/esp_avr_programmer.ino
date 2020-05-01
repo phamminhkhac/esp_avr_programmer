@@ -3,8 +3,8 @@
 
 #define RESET_PIN 4
 
-const char* ssid = "SSID";
-const char* password = "PASSWORD";
+const char* ssid = STASSID;
+const char* password = STAPSK;
 
 WiFiServer server(80);
 

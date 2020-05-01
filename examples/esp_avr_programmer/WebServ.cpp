@@ -57,8 +57,11 @@ void WebServ::WSCmdDelete(WiFiClient* client, String filename) {
 
 void WebServ::WSCmdFlash(WiFiClient* client, String filename) {
 
-  Stk500 stk500(_resetPin);
-  
+  Serial.begin(115200);
+  Serial.flush();
+  while (Serial.read() != -1);
+  Stk500 stk500(&Serial, _resetPin);
+
   SPIFFS.begin();
 
   File file = SPIFFS.open(filename, "r");
