@@ -45,7 +45,9 @@ void loop() {
       webServ.WSCmdIndex(&client);
     }
     
-    delay(1); 
+    client.flush();
+    while (client.available())
+        client.read();
     client.stop();
   }
 }
