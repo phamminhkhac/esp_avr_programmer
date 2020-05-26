@@ -6,7 +6,7 @@
 class Stk500 {
 
   public:
-    Stk500(Stream* serial, int resPin, Stream* log = nullptr);
+    Stk500(Stream* serial, int resPin, Print* log = nullptr);
     bool setupDevice();
     bool flashPage(byte* loadAddress, byte* data);
     int exitProgMode();
@@ -27,7 +27,7 @@ class Stk500 {
 
     int _resetPin;
     Stream* _serial;
-    Stream* _log;
+    Print* _log;
 };
 
 #endif

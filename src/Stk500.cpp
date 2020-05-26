@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "Stk500.h"
 
-Stk500::Stk500(Stream* serial, int resetPin, Stream* log): _resetPin(resetPin), _serial(serial), _log(log)
+Stk500::Stk500(Stream* serial, int resetPin, Print* log): _resetPin(resetPin), _serial(serial), _log(log)
 {
   pinMode(resetPin, OUTPUT);
 }
