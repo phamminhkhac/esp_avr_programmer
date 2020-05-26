@@ -4,6 +4,7 @@
 Stk500::Stk500(Stream* serial, int resetPin, Print* log): _resetPin(resetPin), _serial(serial), _log(log)
 {
   pinMode(resetPin, OUTPUT);
+  digitalWrite(_resetPin, HIGH);
 }
 
 

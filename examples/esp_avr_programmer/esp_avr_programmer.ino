@@ -12,6 +12,9 @@ WebServ webServ(RESET_PIN);
 
 void setup()
 {
+  pinMode(RESET_PIN, OUTPUT);
+  digitalWrite(RESET_PIN, 1);
+
   WiFi.begin(ssid, password);
   
   while (WiFi.status() != WL_CONNECTED)
@@ -59,17 +62,3 @@ void formatDevice() {
   SPIFFS.end();
   
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
