@@ -6,7 +6,7 @@
 class Stk500
 {
 public:
-  Stk500(Stream *serial, int resPin, Print *log = nullptr);
+  Stk500(Stream *serial, void (*rsFunc)(void));
   bool setupDevice();
   bool flashPage(byte *loadAddress, byte *data);
   int exitProgMode();
@@ -25,9 +25,8 @@ protected:
   int waitForSerialData(int dataCount, int timeout);
   int getFlashPageCount(byte flashData[][131]);
 
-  int _resetPin;
+  void (*_rsFunc)(void);
   Stream *_serial;
-  Print *_log;
 };
 
 #endif

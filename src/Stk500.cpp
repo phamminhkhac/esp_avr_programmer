@@ -1,36 +1,27 @@
 #include <Arduino.h>
 #include "Stk500.h"
 
-Stk500::Stk500(Stream *serial, int resetPin, Print *log) : _resetPin(resetPin), _serial(serial), _log(log)
+Stk500::Stk500(Stream *serial, void (*rsFunc)(void)) : _rsFunc(rsFunc), _serial(serial)
 {
-  if (resetPin >= 0)
-  {
-    pinMode(resetPin, OUTPUT);
-    digitalWrite(_resetPin, HIGH);
-  }
 }
 
 bool Stk500::setupDevice()
 {
   resetMCU();
   int s = getSync();
-  if (_log)
-    _log->printf("avrflash: sync=d%d/0x%x\n", s, s);
+  log_i("avrflash: sync=d%d/0x%x\n", s, s);
   if (!s)
     return false;
   s = setProgParams();
-  if (_log)
-    _log->printf("avrflash: setparam=d%d/0x%x\n", s, s);
+  log_i("avrflash: setparam=d%d/0x%x\n", s, s);
   if (!s)
     return false;
   s = setExtProgParams();
-  if (_log)
-    _log->printf("avrflash: setext=d%d/0x%x\n", s, s);
+  log_i("avrflash: setext=d%d/0x%x\n", s, s);
   if (!s)
     return false;
   s = enterProgMode();
-  if (_log)
-    _log->printf("avrflash: progmode=d%d/0x%x\n", s, s);
+  log_i("avrflash: progmode=d%d/0x%x\n", s, s);
   if (!s)
     return false;
   return true;
@@ -40,8 +31,7 @@ bool Stk500::flashPage(byte *address, byte *data)
 {
   byte header[] = {0x64, 0x00, 0x80, 0x46};
   int s = loadAddress(address[1], address[0]);
-  if (_log)
-    _log->printf("avrflash: loadAddr(%d,%d)=%d\n", address[1], address[0], s);
+  log_i("avrflash: loadAddr(%d,%d)=%d\n", address[1], address[0], s);
 
   _serial->write(header, 4);
   for (int i = 0; i < 128; i++)
@@ -49,26 +39,24 @@ bool Stk500::flashPage(byte *address, byte *data)
   _serial->write(0x20);
 
   s = waitForSerialData(2, 1000);
-  if (s == 0 && _log)
+  if (s == 0)
   {
-    _log->printf("avrflash: flashpage: ack: error\n");
+    log_i("avrflash: flashpage: ack: error\n");
     return false;
   }
   s = _serial->read();
   int t = _serial->read();
-  if (_log)
-    _log->printf("avrflash: flashpage: ack: d%d/d%d - 0x%x/0x%x\n", s, t, s, t);
+  log_i("avrflash: flashpage: ack: d%d/d%d - 0x%x/0x%x\n", s, t, s, t);
 
   return true;
 }
 
 void Stk500::resetMCU()
 {
-
-  digitalWrite(_resetPin, LOW);
-  delay(1);
-  digitalWrite(_resetPin, HIGH);
-  delay(200);
+  if (_rsFunc)
+  {
+    _rsFunc();
+  }
 }
 
 int Stk500::getSync()
@@ -146,7 +134,6 @@ byte Stk500::sendBytes(byte *bytes, int count)
 
 int Stk500::waitForSerialData(int dataCount, int timeout)
 {
-
   int timer = 0;
 
   while (timer < timeout)

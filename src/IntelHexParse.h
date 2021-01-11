@@ -27,7 +27,7 @@ private:
     int GetAddress(byte *hexline);
     int GetLength(byte *hexline);
     int GetRecordType(byte *hexline);
-    byte *GetData(byte *hexline, int len);
+    void GetData(byte *hexline, int len);
     void GetLoadAddress(byte *hexline);
     void EndOfFile();
 };

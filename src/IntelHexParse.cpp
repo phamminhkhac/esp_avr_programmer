@@ -63,7 +63,6 @@ byte *IntelHexParse::GetLoadAddress()
 
 void IntelHexParse::GetLoadAddress(byte *hexline)
 {
-
   char buff[3];
   buff[2] = '\0';
 
@@ -75,9 +74,8 @@ void IntelHexParse::GetLoadAddress(byte *hexline)
   _loadAddress[1] = strtol(buff, 0, 16);
 }
 
-byte *IntelHexParse::GetData(byte *hexline, int len)
+void IntelHexParse::GetData(byte *hexline, int len)
 {
-
   int start = 9;
   int end = (len * 2) + start;
   char buff[3];
@@ -94,7 +92,6 @@ byte *IntelHexParse::GetData(byte *hexline, int len)
 
 void IntelHexParse::EndOfFile()
 {
-
   _loadAddress[1] += 0x40;
   if (_loadAddress[1] == 0)
   {
@@ -110,7 +107,6 @@ void IntelHexParse::EndOfFile()
 
 int IntelHexParse::GetAddress(byte *hexline)
 {
-
   char buff[5];
   buff[0] = hexline[3];
   buff[1] = hexline[4];
@@ -123,7 +119,6 @@ int IntelHexParse::GetAddress(byte *hexline)
 
 int IntelHexParse::GetLength(byte *hexline)
 {
-
   char buff[3];
   buff[0] = hexline[1];
   buff[1] = hexline[2];
@@ -134,7 +129,6 @@ int IntelHexParse::GetLength(byte *hexline)
 
 int IntelHexParse::GetRecordType(byte *hexline)
 {
-
   char buff[3];
   buff[0] = hexline[7];
   buff[1] = hexline[8];
